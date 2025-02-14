@@ -44,6 +44,11 @@ http://<your-server-address>/api
 ```
 All requests must be sent to this endpoint as **POST requests** with `Content-Type: application/json`.
 
+**Additional endpoints:**
+
+- `/health`: Check the system's status.
+- `/uptime`: Return the system's uptime. (3rd party service)
+
 ---
 
 ## 2.3. Request Format 
@@ -68,6 +73,7 @@ All requests must be sent to this endpoint as **POST requests** with `Content-Ty
 - All responses are **JSON-formatted**.  
 - If `"encrypted_message"` is not included, the response will be **encrypted using AES (Fernet encryption)**.  
 - If `"encrypted_message": ["return_raw_message"]` is included, the response will be returned as **plaintext (unencrypted).**  
+- **`return_raw_message` must be placed at the beginning of the list (`encrypted_message[0] = "return_raw_message"`) to be effective**
 
 **Example Response (unencrypted - RAW):**  
 ```json
@@ -208,6 +214,7 @@ Some parameters are encrypted using **RSA** before sending them to the server. T
 ### 2.7.1 How It Works
 - If `"encrypted_message"` is **not included**, the response will be **encrypted using AES (Fernet encryption)**.  
 - If `"encrypted_message": ["return_raw_message"]` is included, the response will be returned **as plaintext (not encrypted).**  
+- **`return_raw_message` must be placed at the beginning of the list (`encrypted_message[0] = "return_raw_message"`) to be effective**
 
 ### 2.7.2 Example Requests & Responses
 
@@ -263,6 +270,7 @@ All API errors return a JSON response with an `"error"` key.
 | **400** | Bad Request | `{"error": "Bad request", "message": "Invalid offset value"}` |
 | **404** | Not Found | `{"error": "Not found", "message": "Action not recognized"}` |
 | **405** | Method Not Allowed | `{"error": "Method not allowed", "message": "Use POST requests only"}` |
+| **413** | POST requests exceed \<n\> bytes | `{"error": "Request entity too large"}` |
 | **415** | Unsupported Media Type | `{"error": "Unsupported Media Type", "message": "Use 'application/json'"}` |
 | **500** | Internal Server Error | `{"error": "Internal server error", "message": "Unexpected error occurred"}` |
 
