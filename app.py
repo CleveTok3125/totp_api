@@ -1,5 +1,6 @@
 import os
 import base64
+import json
 from datetime import datetime, timezone
 from time import time as crrtime
 from copy import deepcopy
@@ -39,7 +40,7 @@ def get_totp(args):
             code = totp.at(crrtime() + offset)
     except (base64.binascii.Error, TypeError, ValueError):
         abort(400, description='Invalid secret key')
-    return {'totp_code': str(code)}
+    return json.dumps({'totp_code': str(code)})
 
 def encrypt(args):
     try:
